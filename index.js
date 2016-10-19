@@ -12,6 +12,7 @@ const app = express();
 
 app.set('port', (process.env.PORT || 5000));
 // app.use(bodyParser.json({ verify: verifyRequestSignature }));
+
 // Process application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 // Process application/json
@@ -20,14 +21,10 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 // App Secret can be retrieved from the App Dashboard
-const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
-  process.env.MESSENGER_APP_SECRET :
-  config.get('appSecret');
+ const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ? process.env.MESSENGER_APP_SECRET : config.get('appSecret');
 
 // Arbitrary value used to validate a webhook
-const VALIDATION_TOKEN = (process.env.MESSENGER_VALIDATION_TOKEN) ?
-  (process.env.MESSENGER_VALIDATION_TOKEN) :
-  config.get('validationToken');
+ const VALIDATION_TOKEN = (process.env.MESSENGER_VALIDATION_TOKEN) ? (process.env.MESSENGER_VALIDATION_TOKEN) : config.get('validationToken');
 
 // Generate a page access token for your page from the App Dashboard
 const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
@@ -48,7 +45,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
 // Index route
 app.get('/', function (req, res) {
     res.send('Hello world, I am a chat bot')
-})
+});
 
 /*
  * Use your own validation token. Check that the token used in the Webhook
@@ -56,10 +53,9 @@ app.get('/', function (req, res) {
  *
  */
 app.get('/webhook', function(req, res) {
-  if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === VALIDATION_TOKEN) {
+  if (req.query['hub.verify_token'] === VALIDATION_TOKEN) {
     console.log("Validating webhook");
-    res.status(200).send(req.query['hub.challenge']);
+    res.send(req.query['hub.challenge']);
   } else {
     console.error("Failed validation. Make sure the validation tokens match.");
     res.sendStatus(403);
