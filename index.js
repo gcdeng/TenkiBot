@@ -11,7 +11,11 @@ const
 const app = express();
 
 app.set('port', (process.env.PORT || 5000));
-app.use(bodyParser.json({ verify: verifyRequestSignature }));
+// app.use(bodyParser.json({ verify: verifyRequestSignature }));
+// Process application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: false}));
+// Process application/json
+app.use(bodyParser.json());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
@@ -69,7 +73,6 @@ app.get('/webhook', function(req, res) {
  * for your page.
  * https://developers.facebook.com/docs/messenger-platform/product-overview/setup#subscribe_app
  *
-*/
 
 app.post('/webhook', function (req, res) {
   var data = req.body;
@@ -109,6 +112,7 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
   }
 });
+*/
 
 // Start server
 // Webhooks must be available via SSL with a certificate signed by a valid

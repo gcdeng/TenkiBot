@@ -2,5 +2,5 @@
     "appSecret": "60294069087e4c90e387d81a7d797af5",
     "pageAccessToken": "EAAYAMXGDQX0BAF64ZAa5ZACaQ64XVJ6O4PsS9oeL1h8XFYi6KXM30FyZBz2qhYKYTMxlNi4ipCuTZCdWWf5PBrNkWbqOKvlZAbnUcMHv2srhz1EycJmOyNE5XeXSAAAPP9DWnOEsJE8TQlDD46TbC0pxLMcmrthevJfFYUS46ZBgZDZD",
     "validationToken": "2/4eji6fuptenkibot",
-    "serverURL": ""
+    "serverURL": "https://shrouded-lowlands-12002.herokuapp.com"
 }
