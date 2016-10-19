@@ -1,0 +1,25 @@
+{
+  "name": "tenkibot",
+  "version": "1.0.0",
+  "description": "fb chatbot for realtime weather information",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gcdeng/TenkiBot.git"
+  },
+  "author": "ericdeng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gcdeng/TenkiBot/issues"
+  },
+  "homepage": "https://github.com/gcdeng/TenkiBot#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "request": "^2.75.0"
+  }
+}
