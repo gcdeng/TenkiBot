@@ -3,12 +3,17 @@
 const
   bodyParser = require('body-parser'),
   express = require('express'),
-  request = require('request');
+  request = require('request'),
+  config = require('config'),
+  crypto = require('crypto'),
+  https = require('https');
 
 const app = express();
 
 app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 // App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
@@ -64,6 +69,7 @@ app.get('/webhook', function(req, res) {
  * for your page.
  * https://developers.facebook.com/docs/messenger-platform/product-overview/setup#subscribe_app
  *
+*/
 
 app.post('/webhook', function (req, res) {
   var data = req.body;
@@ -103,8 +109,7 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
   }
 });
- */
- 
+
 // Start server
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.

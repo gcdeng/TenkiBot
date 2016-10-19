@@ -1,4 +1,5 @@
-{
+{"config": "^1.20.4",
+    "ejs": "^2.4.2",
   "name": "tenkibot",
   "version": "1.0.0",
   "description": "fb chatbot for realtime weather information",
@@ -20,6 +21,8 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "request": "^2.75.0"
+    "request": "^2.75.0",
+    "config": "^1.20.4",
+    "ejs": "^2.4.2"
   }
 }
