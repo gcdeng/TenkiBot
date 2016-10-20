@@ -1,0 +1,6 @@
+curl -X POST -H "Content-Type: application/json" -d '{
+  "setting_type":"greeting",
+  "greeting":{
+    "text":"Search: ?cityname\n\nAdd favorite city: +cityname\n\nPush realtime weather automaticly: clink Subscription button below."
+  }
+}' "https://graph.facebook.com/v2.6/me/thread_settings?access_token=EAAYAMXGDQX0BAF64ZAa5ZACaQ64XVJ6O4PsS9oeL1h8XFYi6KXM30FyZBz2qhYKYTMxlNi4ipCuTZCdWWf5PBrNkWbqOKvlZAbnUcMHv2srhz1EycJmOyNE5XeXSAAAPP9DWnOEsJE8TQlDD46TbC0pxLMcmrthevJfFYUS46ZBgZDZD"
