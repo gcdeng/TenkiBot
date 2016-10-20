@@ -4,17 +4,17 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "call_to_actions":[
     {
       "type":"postback",
-      "title":"How to use",
+      "title":"使用說明",
       "payload":"How_to_use"
     },
     {
       "type":"postback",
-      "title":"Subscription",
+      "title":"訂閱",
       "payload":"Subscription"
     },
     {
       "type":"postback",
-      "title":"Favorite",
+      "title":"我的最愛",
       "payload":"Favorite"
     }
   ]

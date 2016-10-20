@@ -33,6 +33,7 @@ function receivedMessage(event) {
     switch (messageText[0]) {
       case '?':
       case '？':
+      // search
        var city = messageText.substr(1);
        var cityName = regularCityName(city);
        if (cityName=='undefined') {
@@ -45,6 +46,8 @@ function receivedMessage(event) {
       break;
 
       case '+':
+      case '＋':
+      // favorite
       break;
 
       default:

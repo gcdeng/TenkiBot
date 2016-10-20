@@ -2,13 +2,13 @@
 
 1. start ngrok on windows
 ```
-ngrok http 5000
+$ ./ngrok http 5000
 ```
 
 2. Usage
----
-    $ npm start
-
+```
+$ npm start
+```
 
 ##Todo
 1. Subscription: Automatic push weather

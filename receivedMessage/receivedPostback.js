@@ -1,5 +1,4 @@
 var sendTextMessage = require('../sendMessage/sendTextMessage');
-
 /*
 * Postback Event
 *
@@ -24,12 +23,12 @@ function receivedPostback(event) {
   // let them know it was successful
   switch (payload) {
     case "How_to_use":
-     var intro = "Search: ?cityname\n\nAdd favorite city: +cityname\n\nPush realtime weather automaticly: clink Subscription button in the menu.";
+     var intro = "TenkiBot提供最新天氣資訊☀☁☔\n\n查詢今明預報:\n?縣市名稱\n\n查詢一週預報:\n!縣市名稱\n\n訂閱(自動定時推播天氣資訊):\n+縣市名稱\n\n將城市加入最愛(最多五項):\n*縣市名稱";
      sendTextMessage(senderID, intro);
     break;
 
     case "Subscription":
-     var intro = "set push time:"
+     var intro = "設定自動推播時間(ex:9:00, 22:10):"
      sendTextMessage(senderID, intro);
     break;
 
