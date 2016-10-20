@@ -1,5 +1,6 @@
 var sendTextMessage = require('../sendMessage/sendTextMessage');
-
+var WeatherCrawler = require('../searchWeather/WeatherCrawler');
+var regularCityName = require('../searchWeather/regularCityName');
  /*
   * Message Event
   *
@@ -31,9 +32,16 @@ function receivedMessage(event) {
    //  handle message here
     switch (messageText[0]) {
       case '?':
+      case '？':
        var city = messageText.substr(1);
-       // var weather = searchWeather(city);
-       sendTextMessage(senderID, city);
+       var cityName = regularCityName(city);
+       if (cityName=='undefined') {
+         sendTextMessage(senderID, "縣市名稱錯誤");
+       } else {
+         var weather = new WeatherCrawler(senderID, cityName);
+         weather.sendTwoDay();
+       }
+
       break;
 
       case '+':
