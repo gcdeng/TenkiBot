@@ -10,6 +10,6 @@ $ npm start
 ```
 
 ##Todo
-1. Subscription: Automatic push weather
-2. Search city
-3. Favorite cities
+1. Subscription
+2. Search
+3. Favorite
