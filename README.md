@@ -1,10 +1,10 @@
 # TenkiBot
 
-1. start ngrok on windows
+1.start ngrok on windows
 ```
 $ ./ngrok http 5000
 ```
-2. Usage
+2.Usage
 ```
 $ npm start
 ```
