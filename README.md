@@ -4,7 +4,6 @@
 ```
 $ ./ngrok http 5000
 ```
-
 2. Usage
 ```
 $ npm start
