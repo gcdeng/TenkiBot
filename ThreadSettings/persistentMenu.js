@@ -20,6 +20,11 @@ function setPersistentMenu(){
       },
       {
         "type":"postback",
+        "title":"取消訂閱",
+        "payload":"remove_subscription"
+      },
+      {
+        "type":"postback",
         "title":"我的最愛",
         "payload":"Favorite"
       },

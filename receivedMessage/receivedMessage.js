@@ -1,6 +1,7 @@
 var sendTextMessage = require('../sendMessage/sendTextMessage');
 var WeatherCrawler = require('../searchWeather/WeatherCrawler');
 var regularCityName = require('../searchWeather/regularCityName');
+var schedule = require('node-schedule');
  /*
   * Message Event
   *
@@ -45,11 +46,14 @@ function receivedMessage(event, db, callback) {
     console.log("\nQuick reply for message %s with payload %s",
       messageId, quickReplyPayload);
 
-    if (quickReplyPayload==='favorite_quick_reply'){
+    switch (quickReplyPayload) {
+      case 'favorite_quick_reply':
       var cityName = regularCityName(messageText);
       var weather = new WeatherCrawler(senderID, cityName);
       weather.sendTwoDay();
-    } else if (quickReplyPayload==='remove_favorite') {
+      break;
+
+      case 'remove_favorite':
       db.collection('favorite').deleteOne({'senderID': senderID, 'cityName': messageText}, (err, res)=>{
         if (err) {
           return console.log('\nremove favorite error');
@@ -58,6 +62,10 @@ function receivedMessage(event, db, callback) {
           sendTextMessage(senderID, messageText+'已移除');
         }
       });
+      break;
+
+      default:
+
     }
 
     // sendTextMessage(senderID, "Quick reply tapped");
@@ -103,11 +111,12 @@ function receivedMessage(event, db, callback) {
       db.collection('favorite').save({'senderID': senderID, 'cityName': city}, (err, res)=>{
         if (err) {
           console.log('\nfavorite save to db error: '+err);
+          return;
         } else {
           console.log('\nfavorite saved to db: '+res);
         }
       });
-      sendTextMessage(senderID, '已將'+city+'加入最愛, 之後就可以從"我的最愛"選單中快速查詢囉');
+      sendTextMessage(senderID, '已將'+city+'加入最愛, 之後就可以從"我的最愛"選單中快速查詢囉!');
       callback();
       break;
 
@@ -122,7 +131,7 @@ function receivedMessage(event, db, callback) {
       }
       db.collection('favorite').deleteOne({'senderID': senderID, 'cityName': city}, (err, res)=>{
         if (err) {
-          return console.log('\nremove favorite error');
+          return console.log('\nremove favorite from db error');
         } else {
           console.log('\nsuccessfully removed favorite: '+ res);
           sendTextMessage(senderID, city+'已移除');
@@ -130,28 +139,75 @@ function receivedMessage(event, db, callback) {
       });
       break;
 
-      case '@':
-      case '＠':
-      // add subscribe
-      var city = messageText.substr(1);
-      var cityName = regularCityName(city);
-      if (cityName===undefined) {
-        sendTextMessage(senderID, "縣市名稱打錯囉");
-        return;
-      }
-      sendTextMessage(senderID, city);
-      break;
-
       case '#':
       case '＃':
-      // remove subscribe
-      var city = messageText.substr(1);
+      // add subscribe
+      // parse city name
+      var indexOfSpace = messageText.indexOf(' ');
+      var city = messageText.substr(1, indexOfSpace-1);
+      // console.log(city);
       var cityName = regularCityName(city);
       if (cityName===undefined) {
         sendTextMessage(senderID, "縣市名稱打錯囉");
         return;
       }
-      sendTextMessage(senderID, city);
+      // parse subscription time
+      var subTime = messageText.substr(indexOfSpace+1);
+      var indexOfSemicolon = subTime.indexOf(':');
+      // console.log(subTime.length);
+      // console.log(indexOfSemicolon);
+      if (indexOfSemicolon!=-1) {
+        var hour = subTime.substr(0, indexOfSemicolon);
+      }
+      else if (subTime.length===3) {
+        var hour = subTime.substr(0, 1);
+      }
+      else if (subTime.length===4){
+        var hour = subTime.substr(0, 2);
+      }
+      var minute = subTime.substr(-2);
+      if (hour.charAt(0)=='0') {
+        hour = hour.substr(1);
+      }
+      if (minute.charAt(0)=='0') {
+        minute = minute.substr(1);
+      }
+      console.log('scheduleJob: \nhour: '+hour+'\nminute: '+minute);
+      // scheduleJob
+      var subJob = schedule.scheduleJob(senderID, '0 '+minute+' '+hour+' * * *', ()=>{
+        console.log('\n***scheduleJob***');
+        var weather = new WeatherCrawler(senderID, cityName);
+        weather.sendTwoDay();
+      });
+
+      db.collection('subscription').save({'senderID': senderID, 'cityName': city, 'hour': hour, 'minute': minute}, (err, res)=>{
+        if(err){
+          console.log('\n[db error]subscription save');
+          return;
+        } else {
+          console.log('\nsuccessfully saved subscription to db');
+          // console.log(res);
+        }
+      });
+
+      sendTextMessage(senderID, '將會固定在每天'+hour+'點'+minute+'分傳送'+city+'的最新天氣資訊給您! =)');
+      break;
+
+      case '@':
+      case '＠':
+      // remove subscribe
+
+      db.collection('subscription').deleteMany({senderID: senderID}, (err, res)=>{
+        if(err) return console.log('\nremove subscription error');
+        console.log('\nremoved subscription '+res);
+      });
+      var remove_scheduleJob = schedule.scheduledJobs[senderID];
+      try {
+        remove_scheduleJob.cancel();
+      } catch (e) {
+        console.log('schedule have canceled');
+      }
+      sendTextMessage(senderID, '已幫您取消訂閱');
       break;
 
       default:

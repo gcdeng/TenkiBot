@@ -1,6 +1,7 @@
 var ctiyNameConversion = {
   "臺北市": "Taipei_City",
   "臺北": "Taipei_City",
+  "台北市": "Taipei_City",
   "台北": "Taipei_City",
   "taipei": "Taipei_City",
   "Taipei": "Taipei_City",

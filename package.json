@@ -26,6 +26,7 @@
     "ejs": "^2.4.2",
     "express": "^4.14.0",
     "mongodb": "^2.2.11",
+    "node-schedule": "^1.2.0",
     "request": "^2.75.0"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ function setGreeting(){
   var message = {
     "setting_type":"greeting",
     "greeting":{
-      "text":"TenkiBot是一個天氣小幫手，可以提供您即時天氣查詢以及定時推播最新天氣狀況!"
+      "text":"TenkiBot是一個天氣小幫手，可以提供您天氣預報查詢以及定時推播最新天氣狀況!"
     }
   }
 
