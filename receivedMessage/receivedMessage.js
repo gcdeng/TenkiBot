@@ -133,15 +133,29 @@ function receivedMessage(event, db, callback) {
       case '@':
       case '＠':
       // add subscribe
+      var city = messageText.substr(1);
+      var cityName = regularCityName(city);
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
+        return;
+      }
+      sendTextMessage(senderID, city);
       break;
 
       case '#':
       case '＃':
       // remove subscribe
+      var city = messageText.substr(1);
+      var cityName = regularCityName(city);
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
+        return;
+      }
+      sendTextMessage(senderID, city);
       break;
 
       default:
-      sendTextMessage(senderID, '要先打上功能的關鍵字喔!');
+      sendTextMessage(senderID, '記得開頭要先打上功能的關鍵字喔!');
     }
   }
 }

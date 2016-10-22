@@ -23,22 +23,21 @@ function receivedPostback(event, db, callback) {
   // let them know it was successful
   switch (payload) {
     case "How_to_use":
-    var intro = "嗨!我是TenkiBot☀☁☔\n\n查詢今明預報:\n?縣市名稱\n\n查詢一週預報:\n!縣市名稱\n\n訂閱(自動定時推播天氣資訊):\n@縣市名稱\n\n移除訂閱:\n#縣市名稱\n\n將城市加入最愛(方便查詢):\n+縣市名稱\n\n移除最愛:\n-縣市名稱";
+    var intro = "嗨!我是TenkiBot☀☁☔\n\n查詢今明預報:\n?縣市名稱\n\n查詢一週預報:\n!縣市名稱\n\n訂閱(自動定時推播天氣資訊):\n@縣市名稱\n\n移除訂閱:\n#縣市名稱\n\n將城市加入最愛(方便查詢):\n+縣市名稱\n\n移除最愛:\n-縣市名稱\n(也可以使用選單中的'移除最愛'喔)";
     sendTextMessage(senderID, intro);
     break;
 
     case "Subscription":
     // var intro = "請設定自動推播時間(ex:7:00, 22:10):"
-    var intro = '請輸入: "+縣市名稱" (ex: +台北)';
+    var intro = '請輸入: "+縣市名稱"\n(ex: +台北)';
     sendTextMessage(senderID, intro);
     break;
 
     case "Favorite":
     db.collection('favorite').find({'senderID': senderID}).toArray((err, res)=>{
       if(err) return console.log('\nfavorite find db error: %s\n'+err);
-      // sendTextMessage(senderID, JSON.stringify(res));
       if (res.length==0) {
-        sendTextMessage(senderID, '還沒有城市被加入喔，趕快加一個可以更方便查詢');
+        sendTextMessage(senderID, '還沒有城市被加入喔(將常用的城市加入最愛可以更方便查詢!)');
         return;
       }
       var faCitys = [];
@@ -58,7 +57,10 @@ function receivedPostback(event, db, callback) {
     case 'remove_favorite':
     db.collection('favorite').find({'senderID': senderID}).toArray((err, res)=>{
       if(err) return console.log('favorite find db error: %s\n'+err);
-      // sendTextMessage(senderID, JSON.stringify(res));
+      if (res.length==0) {
+        sendTextMessage(senderID, '還沒有城市被加入喔(將常用的城市加入最愛可以更方便查詢!)');
+        return;
+      }
       var faCitys = [];
       for (var i = 0; i < res.length; i++) {
         faCitys[i] = {
