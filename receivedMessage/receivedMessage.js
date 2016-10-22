@@ -15,7 +15,7 @@ var regularCityName = require('../searchWeather/regularCityName');
   * then we'll simply confirm that we've received the attachment.
   *
   */
-function receivedMessage(event) {
+function receivedMessage(event, db, callback) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
@@ -25,15 +25,40 @@ function receivedMessage(event) {
   senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
 
+  var isEcho = message.is_echo;
   var messageId = message.mid;
+  var appId = message.app_id;
+  var metadata = message.metadata;
+
+  // You may get a text or attachment but not both
   var messageText = message.text;
+  var messageAttachments = message.attachments;
+  var quickReply = message.quick_reply;
+
+  if (isEcho) {
+    // Just logging message echoes to console
+    console.log("Received echo for message %s and app %d with metadata %s",
+      messageId, appId, metadata);
+    return;
+  } else if (quickReply) {
+    var quickReplyPayload = quickReply.payload;
+    console.log("Quick reply for message %s with payload %s",
+      messageId, quickReplyPayload);
+    if (quickReplyPayload==='favorite_quick_reply'){
+      var cityName = regularCityName(messageText);
+      var weather = new WeatherCrawler(senderID, cityName);
+      weather.sendTwoDay();
+    }
+
+    // sendTextMessage(senderID, "Quick reply tapped");
+    return;
+  }
 
   if (messageText) {
-   //  handle message here
+    //  handle message here
     switch (messageText[0]) {
       case '?':
       case '？':
-
       // search two day forecast
       var cityName = regularCityName(messageText.substr(1));
       if (cityName===undefined) {
@@ -59,12 +84,21 @@ function receivedMessage(event) {
       case '+':
       case '＋':
       // add favorite
-      var cityName = regularCityName(messageText.substr(1));
+      var city = messageText.substr(1);
+      var cityName = regularCityName(city);
       if (cityName===undefined) {
         sendTextMessage(senderID, "縣市名稱打錯囉");
         return;
       }
-      
+      db.collection('favorite').save({'senderID': senderID, 'cityName': city}, (err, res)=>{
+        if (err) {
+          console.log('favorite save to db error: '+err);
+        } else {
+          console.log('favorite saved to db: '+res);
+        }
+      });
+      sendTextMessage(senderID, '已將'+city+'加入最愛, 之後就可以從"我的最愛"選單中快速查詢囉');
+      callback();
       break;
 
       case '-':
@@ -83,7 +117,7 @@ function receivedMessage(event) {
       break;
 
       default:
-       sendTextMessage(senderID, '要先打上功能的關鍵字喔!');
+      sendTextMessage(senderID, '要先打上功能的關鍵字喔!');
     }
   }
 }

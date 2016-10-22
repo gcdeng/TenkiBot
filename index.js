@@ -1,11 +1,14 @@
 const
   bodyParser = require('body-parser'),
   express = require('express'),
-  config = require('config');
+  config = require('config'),
+  MongoClient = require('mongodb').MongoClient;
 
 var receivedMessage = require('./receivedMessage/receivedMessage');
 var receivedPostback = require('./receivedMessage/receivedPostback');
-
+var receivedDeliveryConfirmation = require('./receivedMessage/receivedDeliveryConfirmation');
+var receivedMessageRead = require('./receivedMessage/receivedMessageRead');
+var mongodburl = 'mongodb://gcdeng:tenkibot20161019@ds063856.mlab.com:63856/tenkibotdb';
 const app = express();
 
 app.set('port', (process.env.PORT || 5000));
@@ -69,9 +72,26 @@ app.get('/webhook', function(req, res) {
        pageEntry.messaging.forEach(function(messagingEvent) {
         //  console.log(messagingEvent);
         if (messagingEvent.message) {
-          receivedMessage(messagingEvent);
+          MongoClient.connect(mongodburl, (err, db)=>{
+            if (err) {
+              console.log('receivedMessage db connect err');
+              return;
+            }
+            receivedMessage(messagingEvent, db, function() {
+              db.close();
+            });
+          });
         } else if (messagingEvent.postback) {
-          receivedPostback(messagingEvent);
+          MongoClient.connect(mongodburl, (err, db)=>{
+            if (err) return console.log('receivedPostback db connect err');
+            receivedPostback(messagingEvent, db, ()=>{
+              db.close();
+            });
+          });
+        } else if (messagingEvent.delivery) {
+          receivedDeliveryConfirmation(messagingEvent);
+        } else if (messagingEvent.read) {
+          receivedMessageRead(messagingEvent);
         } else {
           console.log("Webhook received unknown messagingEvent: ", messagingEvent);
         }

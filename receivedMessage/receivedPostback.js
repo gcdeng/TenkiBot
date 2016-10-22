@@ -1,4 +1,5 @@
 var sendTextMessage = require('../sendMessage/sendTextMessage');
+var qrFavorite = require('../sendMessage/qrFavorite');
 /*
 * Postback Event
 *
@@ -6,7 +7,7 @@ var sendTextMessage = require('../sendMessage/sendTextMessage');
 * https://developers.facebook.com/docs/messenger-platform/webhook-reference/postback-received
 *
 */
-function receivedPostback(event) {
+function receivedPostback(event, db, callback) {
   console.log(event);
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -28,16 +29,31 @@ function receivedPostback(event) {
     break;
 
     case "Subscription":
-    var intro = "請設定自動推播時間(ex:7:00, 22:10):"
+    // var intro = "請設定自動推播時間(ex:7:00, 22:10):"
+    var intro = '請輸入: "+縣市名稱" (ex: +台北)';
     sendTextMessage(senderID, intro);
     break;
 
     case "Favorite":
-    sendTextMessage(senderID, "Favorite");
+    db.collection('favorite').find({'senderID': senderID}).toArray((err, res)=>{
+      if(err) return console.log('favorite find db error'+err);
+      // sendTextMessage(senderID, JSON.stringify(res));
+      var faCitys = [];
+      for (var i = 0; i < res.length; i++) {
+        faCitys[i] = {
+          content_type: 'text',
+          title: res[i].cityName,
+          payload: 'favorite_quick_reply'
+        }
+      }
+      // console.log('***faCitys: '+JSON.stringify(faCitys[0]));
+      qrFavorite(senderID, faCitys);
+    });
+    callback();
     break;
 
     default:
-    
+    sendTextMessage(senderID, payload);
   }
 }
 
