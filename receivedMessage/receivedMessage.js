@@ -33,21 +33,46 @@ function receivedMessage(event) {
     switch (messageText[0]) {
       case '?':
       case '？':
-      // search
-       var city = messageText.substr(1);
-       var cityName = regularCityName(city);
-       if (cityName=='undefined') {
+      // search two day forecast
+       var cityName = regularCityName(messageText.substr(1));
+       if (cityName==='undefined') {
          sendTextMessage(senderID, "縣市名稱錯誤");
        } else {
          var weather = new WeatherCrawler(senderID, cityName);
          weather.sendTwoDay();
        }
+      break;
 
+      case '!':
+      case '！':
+      // search week forecast
+      var cityName = regularCityName(messageText.substr(1));
+      if (cityName==='undefined') {
+        sendTextMessage(senderID, "縣市名稱錯誤");
+      } else {
+        var weather = new WeatherCrawler(senderID, cityName);
+        weather.sendWeekly();
+      }
       break;
 
       case '+':
       case '＋':
-      // favorite
+      // add favorite
+      break;
+
+      case '-':
+      case '－':
+      // remove favorite
+      break;
+
+      case '@':
+      case '＠':
+      // add subscribe
+      break;
+
+      case '#':
+      case '＃':
+      // remove subscribe
       break;
 
       default:

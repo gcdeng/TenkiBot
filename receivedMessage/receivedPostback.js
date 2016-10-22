@@ -23,16 +23,17 @@ function receivedPostback(event) {
   // let them know it was successful
   switch (payload) {
     case "How_to_use":
-     var intro = "TenkiBot提供最新天氣資訊☀☁☔\n\n查詢今明預報:\n?縣市名稱\n\n查詢一週預報:\n!縣市名稱\n\n訂閱(自動定時推播天氣資訊):\n+縣市名稱\n\n將城市加入最愛(最多五項):\n*縣市名稱";
+     var intro = "嗨!我是TenkiBot☀☁☔\n\n查詢今明預報:\n?縣市名稱\n\n查詢一週預報:\n!縣市名稱\n\n訂閱(自動定時推播天氣資訊):\n@縣市名稱\n\n移除訂閱:\n#縣市名稱\n\n將城市加入最愛(方便查詢):\n+縣市名稱\n\n移除最愛:\n-縣市名稱";
      sendTextMessage(senderID, intro);
     break;
 
     case "Subscription":
-     var intro = "設定自動推播時間(ex:9:00, 22:10):"
+     var intro = "請設定自動推播時間(ex:7:00, 22:10):"
      sendTextMessage(senderID, intro);
     break;
 
-    case "Fovorite":
+    case "Favorite":
+      sendTextMessage(senderID, "Favorite");
     break;
 
     default:
