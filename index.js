@@ -8,6 +8,7 @@ var receivedMessage = require('./receivedMessage/receivedMessage');
 var receivedPostback = require('./receivedMessage/receivedPostback');
 var receivedDeliveryConfirmation = require('./receivedMessage/receivedDeliveryConfirmation');
 var receivedMessageRead = require('./receivedMessage/receivedMessageRead');
+
 var mongodburl = 'mongodb://gcdeng:tenkibot20161019@ds063856.mlab.com:63856/tenkibotdb';
 const app = express();
 
@@ -34,7 +35,7 @@ const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ? (process.e
 const SERVER_URL = (process.env.SERVER_URL) ? (process.env.SERVER_URL) : config.get('serverURL');
 
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
-  console.error("Missing config values");
+  console.error("\nMissing config values");
   process.exit(1);
 }
 
@@ -45,10 +46,10 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
  */
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === VALIDATION_TOKEN) {
-    console.log("Validating webhook");
+    console.log("\nValidating webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
-    console.error("Failed validation. Make sure the validation tokens match.");
+    console.error("\nFailed validation. Make sure the validation tokens match.");
     res.sendStatus(403);
   }
 });
@@ -63,18 +64,14 @@ app.get('/webhook', function(req, res) {
  app.post('/webhook', function(req, res){
    var data = req.body;
    if (data.object=='page') {
-    //  console.log("webhook receive message");
-    //  console.log(data);
      data.entry.forEach(function(pageEntry) {
-      //  console.log(pageEntry);
        var pageID = pageEntry.id;
        var timeOfEvent = pageEntry.time;
        pageEntry.messaging.forEach(function(messagingEvent) {
-        //  console.log(messagingEvent);
         if (messagingEvent.message) {
           MongoClient.connect(mongodburl, (err, db)=>{
             if (err) {
-              console.log('receivedMessage db connect err');
+              console.log('receivedMessage db connect err\n');
               return;
             }
             receivedMessage(messagingEvent, db, function() {
@@ -83,7 +80,7 @@ app.get('/webhook', function(req, res) {
           });
         } else if (messagingEvent.postback) {
           MongoClient.connect(mongodburl, (err, db)=>{
-            if (err) return console.log('receivedPostback db connect err');
+            if (err) return console.log('receivedPostback db connect err\n');
             receivedPostback(messagingEvent, db, ()=>{
               db.close();
             });
@@ -93,7 +90,7 @@ app.get('/webhook', function(req, res) {
         } else if (messagingEvent.read) {
           receivedMessageRead(messagingEvent);
         } else {
-          console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+          console.log("\nWebhook received unknown messagingEvent: ", messagingEvent);
         }
        });
      });
@@ -105,5 +102,5 @@ app.get('/webhook', function(req, res) {
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+  console.log('\nNode app is running on port', app.get('port'));
 });

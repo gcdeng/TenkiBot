@@ -1,12 +1,12 @@
 var callSendAPI = require('./callSendAPI');
 
-function qrFavorite(recipientId, faCitys){
+function qrFavorite(recipientId, faCitys, messageText){
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: '想要查詢哪個城市的天氣呢?',
+      text: messageText,
       quick_replies: faCitys
     }
   }

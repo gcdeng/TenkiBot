@@ -21,7 +21,7 @@ function receivedMessage(event, db, callback) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
 
-  console.log("Received message for user %d and page %d at %d with message:",
+  console.log("\nReceived message for user %d and page %d at %d with message:",
   senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
 
@@ -37,17 +37,27 @@ function receivedMessage(event, db, callback) {
 
   if (isEcho) {
     // Just logging message echoes to console
-    console.log("Received echo for message %s and app %d with metadata %s",
+    console.log("\nReceived echo for message %s and app %d with metadata %s",
       messageId, appId, metadata);
     return;
   } else if (quickReply) {
     var quickReplyPayload = quickReply.payload;
-    console.log("Quick reply for message %s with payload %s",
+    console.log("\nQuick reply for message %s with payload %s",
       messageId, quickReplyPayload);
+
     if (quickReplyPayload==='favorite_quick_reply'){
       var cityName = regularCityName(messageText);
       var weather = new WeatherCrawler(senderID, cityName);
       weather.sendTwoDay();
+    } else if (quickReplyPayload==='remove_favorite') {
+      db.collection('favorite').deleteOne({'senderID': senderID, 'cityName': messageText}, (err, res)=>{
+        if (err) {
+          return console.log('\nremove favorite error');
+        } else {
+          console.log('\nsuccessfully removed favorite: '+ res);
+          sendTextMessage(senderID, messageText+'已移除');
+        }
+      });
     }
 
     // sendTextMessage(senderID, "Quick reply tapped");
@@ -92,9 +102,9 @@ function receivedMessage(event, db, callback) {
       }
       db.collection('favorite').save({'senderID': senderID, 'cityName': city}, (err, res)=>{
         if (err) {
-          console.log('favorite save to db error: '+err);
+          console.log('\nfavorite save to db error: '+err);
         } else {
-          console.log('favorite saved to db: '+res);
+          console.log('\nfavorite saved to db: '+res);
         }
       });
       sendTextMessage(senderID, '已將'+city+'加入最愛, 之後就可以從"我的最愛"選單中快速查詢囉');
@@ -104,6 +114,20 @@ function receivedMessage(event, db, callback) {
       case '-':
       case '－':
       // remove favorite
+      var city = messageText.substr(1);
+      var cityName = regularCityName(city);
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
+        return;
+      }
+      db.collection('favorite').deleteOne({'senderID': senderID, 'cityName': city}, (err, res)=>{
+        if (err) {
+          return console.log('\nremove favorite error');
+        } else {
+          console.log('\nsuccessfully removed favorite: '+ res);
+          sendTextMessage(senderID, city+'已移除');
+        }
+      });
       break;
 
       case '@':

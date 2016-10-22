@@ -15,12 +15,12 @@ function receivedDeliveryConfirmation(event) {
 
   if (messageIDs) {
     messageIDs.forEach(function(messageID) {
-      console.log("Received delivery confirmation for message ID: %s",
+      console.log("\nReceived delivery confirmation for message ID: %s",
         messageID);
     });
   }
 
-  console.log("All message before %d were delivered.", watermark);
+  console.log("\nAll message before %d were delivered.", watermark);
 }
 
 module.exports = receivedDeliveryConfirmation;

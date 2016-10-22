@@ -22,14 +22,14 @@ function callSendAPI(messageData) {
       var messageId = body.message_id;
 
       if (messageId) {
-        console.log("Successfully sent message with id %s to recipient %s",
+        console.log("\nSuccessfully sent message with id %s to recipient %s",
           messageId, recipientId);
       } else {
-        console.log("Successfully called Send API for recipient %s",
+        console.log("\nSuccessfully called Send API for recipient %s",
         recipientId);
       }
     } else {
-      console.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
+      console.error("\nFailed calling Send API", response.statusCode, response.statusMessage, body.error);
     }
   });
 }

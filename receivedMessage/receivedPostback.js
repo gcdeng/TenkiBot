@@ -8,7 +8,6 @@ var qrFavorite = require('../sendMessage/qrFavorite');
 *
 */
 function receivedPostback(event, db, callback) {
-  console.log(event);
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
@@ -17,7 +16,7 @@ function receivedPostback(event, db, callback) {
   // button for Structured Messages.
   var payload = event.postback.payload;
 
-  console.log("Received postback for user %d and page %d with payload '%s' " +
+  console.log("\nReceived postback for user %d and page %d with payload '%s'\n" +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
   // When a postback is called, we'll send a message back to the sender to
@@ -36,8 +35,12 @@ function receivedPostback(event, db, callback) {
 
     case "Favorite":
     db.collection('favorite').find({'senderID': senderID}).toArray((err, res)=>{
-      if(err) return console.log('favorite find db error'+err);
+      if(err) return console.log('\nfavorite find db error: %s\n'+err);
       // sendTextMessage(senderID, JSON.stringify(res));
+      if (res.length==0) {
+        sendTextMessage(senderID, '還沒有城市被加入喔，趕快加一個可以更方便查詢');
+        return;
+      }
       var faCitys = [];
       for (var i = 0; i < res.length; i++) {
         faCitys[i] = {
@@ -46,8 +49,26 @@ function receivedPostback(event, db, callback) {
           payload: 'favorite_quick_reply'
         }
       }
-      // console.log('***faCitys: '+JSON.stringify(faCitys[0]));
-      qrFavorite(senderID, faCitys);
+      var messageText = '想要查詢哪個城市的天氣呢?'
+      qrFavorite(senderID, faCitys, messageText);
+    });
+    callback();
+    break;
+
+    case 'remove_favorite':
+    db.collection('favorite').find({'senderID': senderID}).toArray((err, res)=>{
+      if(err) return console.log('favorite find db error: %s\n'+err);
+      // sendTextMessage(senderID, JSON.stringify(res));
+      var faCitys = [];
+      for (var i = 0; i < res.length; i++) {
+        faCitys[i] = {
+          content_type: 'text',
+          title: res[i].cityName,
+          payload: 'remove_favorite'
+        }
+      }
+      var messageText = '想要移除哪個呢?'
+      qrFavorite(senderID, faCitys, messageText);
     });
     callback();
     break;

@@ -13,7 +13,7 @@ function receivedMessageRead(event) {
   var watermark = event.read.watermark;
   var sequenceNumber = event.read.seq;
 
-  console.log("Received message read event for watermark %d and sequence " +
+  console.log("\nReceived message read event for watermark %d and sequence " +
     "number %d", watermark, sequenceNumber);
 }
 
