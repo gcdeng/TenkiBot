@@ -1,6 +1,6 @@
 var callSendAPI = require('./callSendAPI');
 
-function sendTwoDayMessage(recipientId, wfDay) {
+function sendTwoDayMessage(recipientId, wfDay, cwbUrl) {
   var messageData = {
     recipient: {
       id: recipientId
@@ -51,7 +51,12 @@ function sendTwoDayMessage(recipientId, wfDay) {
             {
               title: wfDay[6].wfDate+' '+wfDay[6].wfDoW,
               subtitle: wfDay[6].wfTemp+'℃\n'+wfDay[6].wfCondition,
-              image_url: wfDay[6].wfImgUrl
+              image_url: wfDay[6].wfImgUrl,
+              buttons: [{
+                type: "web_url",
+                url: cwbUrl,
+                title: "連結至中央氣象局"
+              }],
             }
           ]
         }

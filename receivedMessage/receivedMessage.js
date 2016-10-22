@@ -33,22 +33,23 @@ function receivedMessage(event) {
     switch (messageText[0]) {
       case '?':
       case '？':
+
       // search two day forecast
-       var cityName = regularCityName(messageText.substr(1));
-       if (cityName==='undefined') {
-         sendTextMessage(senderID, "縣市名稱錯誤");
-       } else {
-         var weather = new WeatherCrawler(senderID, cityName);
-         weather.sendTwoDay();
-       }
+      var cityName = regularCityName(messageText.substr(1));
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
+      } else {
+        var weather = new WeatherCrawler(senderID, cityName);
+        weather.sendTwoDay();
+      }
       break;
 
       case '!':
       case '！':
       // search week forecast
       var cityName = regularCityName(messageText.substr(1));
-      if (cityName==='undefined') {
-        sendTextMessage(senderID, "縣市名稱錯誤");
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
       } else {
         var weather = new WeatherCrawler(senderID, cityName);
         weather.sendWeekly();
@@ -58,6 +59,12 @@ function receivedMessage(event) {
       case '+':
       case '＋':
       // add favorite
+      var cityName = regularCityName(messageText.substr(1));
+      if (cityName===undefined) {
+        sendTextMessage(senderID, "縣市名稱打錯囉");
+        return;
+      }
+      
       break;
 
       case '-':
@@ -76,7 +83,7 @@ function receivedMessage(event) {
       break;
 
       default:
-       sendTextMessage(senderID, messageText);
+       sendTextMessage(senderID, '要先打上功能的關鍵字喔!');
     }
   }
 }

@@ -15,21 +15,11 @@ function sendTwoDayMessage(recipientId, twoDay, cwbUrl) {
             subtitle: twoDay[0].fTemp + '℃\n' + twoDay[0].fCondition + '\n' + twoDay[0].fFeel + '\n降雨機率: ' + twoDay[0].fRain + '\n',
             // item_url: "https://www.oculus.com/en-us/rift/",
             image_url: twoDay[0].fImgUrl,
-            buttons: [{
-              type: "web_url",
-              url: cwbUrl,
-              title: "連結至中央氣象局"
-            }],
           }, {
             title: twoDay[1].fTime,
             subtitle: twoDay[1].fTemp + '℃\n' + twoDay[1].fCondition + '\n' + twoDay[1].fFeel + '\n降雨機率: ' + twoDay[1].fRain + '\n',
             // item_url: "https://www.oculus.com/en-us/rift/",
             image_url: twoDay[1].fImgUrl,
-            buttons: [{
-              type: "web_url",
-              url: cwbUrl,
-              title: "連結至中央氣象局"
-            }],
           }, {
             title: twoDay[2].fTime,
             subtitle: twoDay[2].fTemp + '℃\n' + twoDay[2].fCondition + '\n' + twoDay[2].fFeel + '\n降雨機率: ' + twoDay[2].fRain + '\n',

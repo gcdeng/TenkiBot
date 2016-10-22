@@ -36,9 +36,10 @@ var WeatherCrawler = function (senderID, city) {
 
   this.sendWeekly = function(){
     var senderID = this.senderID;
-    var cwbUrl = 'http://www.cwb.gov.tw/V7/forecast/taiwan/inc/city/'+this.city+'.htm';
+    var cwbUrl = 'http://www.cwb.gov.tw/V7/forecast/taiwan/'+this.city+'.htm';
+    var cwbWeekUrl = 'http://www.cwb.gov.tw/V7/forecast/taiwan/inc/city/'+this.city+'.htm';
     request({
-      url: cwbUrl,
+      url: cwbWeekUrl,
       method: "GET"
     }, function(e, r, b){
       if (e || !b) return "cheerio error";
@@ -64,7 +65,7 @@ var WeatherCrawler = function (senderID, city) {
         wfDay[i] = {'wfDate': wfDate, 'wfDoW': wfDoW, 'wfImgUrl': wfImgUrl, 'wfCondition': wfCondition, 'wfTemp': wfTemp}
       }
       // console.log(wfDay);
-      sendWeekForecast(senderID, wfDay);
+      sendWeekForecast(senderID, wfDay, cwbUrl);
     });
   }
 }

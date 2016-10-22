@@ -4,7 +4,11 @@
 ```
 $ ./ngrok http 5000
 ```
-2.Usage
+2.install module
+```
+$ npm install
+```
+3.start server
 ```
 $ npm start
 ```
