@@ -1,12 +1,12 @@
 # TenkiBot
 
-1.start ngrok on windows
-```
-$ ./ngrok http 5000
-```
-2.install module
+1.install module
 ```
 $ npm install
+```
+2.start ngrok
+```
+$ ./ngrok http 56057
 ```
 3.start server
 ```
