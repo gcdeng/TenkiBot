@@ -1,4 +1,7 @@
 var request = require('request');
+var config = require('config');
+// Generate a page access token for your page from the App Dashboard
+const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ? (process.env.MESSENGER_PAGE_ACCESS_TOKEN) : config.get('pageAccessToken');
 
 function setGreeting(){
   var message = {
@@ -10,7 +13,7 @@ function setGreeting(){
 
   request({
     uri: 'https://graph.facebook.com/v2.6/me/thread_settings',
-    qs: { access_token: 'EAAYAMXGDQX0BAHlFyCF9hJSzV2UyFPcvfKC85cZA9p2RxIlHH82QOpvd1iXKldUyfbPHLc8DEIYVZA9chygA3iqmNZCGuCu822ZBF8pbo4dZCSZCVHRW2xp1GW6ITGT1o9w8ZBtbUvOWp74lU7O2sJqMZB1iqxDEKWxk9UllJcQXNwZDZD' },
+    qs: { access_token: PAGE_ACCESS_TOKEN },
     method: 'POST',
     json: message
   }, (err, res)=>{
