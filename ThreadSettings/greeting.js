@@ -10,7 +10,7 @@ function setGreeting(){
 
   request({
     uri: 'https://graph.facebook.com/v2.6/me/thread_settings',
-    qs: { access_token: 'EAAYAMXGDQX0BAF64ZAa5ZACaQ64XVJ6O4PsS9oeL1h8XFYi6KXM30FyZBz2qhYKYTMxlNi4ipCuTZCdWWf5PBrNkWbqOKvlZAbnUcMHv2srhz1EycJmOyNE5XeXSAAAPP9DWnOEsJE8TQlDD46TbC0pxLMcmrthevJfFYUS46ZBgZDZD' },
+    qs: { access_token: 'EAAYAMXGDQX0BAHlFyCF9hJSzV2UyFPcvfKC85cZA9p2RxIlHH82QOpvd1iXKldUyfbPHLc8DEIYVZA9chygA3iqmNZCGuCu822ZBF8pbo4dZCSZCVHRW2xp1GW6ITGT1o9w8ZBtbUvOWp74lU7O2sJqMZB1iqxDEKWxk9UllJcQXNwZDZD' },
     method: 'POST',
     json: message
   }, (err, res)=>{
