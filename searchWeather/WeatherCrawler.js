@@ -10,7 +10,8 @@ var WeatherCrawler = function (senderID, city) {
 
   this.sendTwoDay = function(){
     var senderID = this.senderID;
-    var cwbUrl = 'http://www.cwb.gov.tw/V7/forecast/taiwan/'+this.city+'.htm';
+    var cityName = this.city;
+    var cwbUrl = 'http://www.cwb.gov.tw/V7/forecast/taiwan/'+cityName+'.htm';
     request({
       url: cwbUrl,
       method: "GET"
@@ -18,6 +19,8 @@ var WeatherCrawler = function (senderID, city) {
       if (e || !b) return "cheerio error";
       var $ = cheerio.load(b);
       var twoDay = [];
+      var twoDayforecastTh = $('table.FcstBoxTable01 thead th');
+      var cityName = twoDayforecastTh[0].children[0].data;
       var twoDayforecastTr = $('table.FcstBoxTable01 tbody tr');
       for (var i = 0; i < twoDayforecastTr.length; i++) {
         fTime = twoDayforecastTr[i].children[1].children[0].data;
@@ -30,7 +33,7 @@ var WeatherCrawler = function (senderID, city) {
         fRain = twoDayforecastTr[i].children[9].children[0].data;
         twoDay[i] = {'fTime': fTime, 'fTemp': fTemp, 'fCondition': fCondition, 'fImgUrl': fImgUrl, 'fFeel': fFeel, 'fRain': fRain}
       }
-      sendTwoDayMessage(senderID, twoDay, cwbUrl);
+      sendTwoDayMessage(senderID, cityName, twoDay, cwbUrl);
     });
   }
 
@@ -47,7 +50,8 @@ var WeatherCrawler = function (senderID, city) {
       var wfDay = [];
       var wfNight = [];
       var weekForecastThead = $('table.FcstBoxTable01 thead tr th');
-      // console.log(weekForecastThead[1].children[0].data);
+      // console.log(weekForecastThead[0].children[0].data);
+      var cityName = weekForecastThead[0].children[0].data;
       var weekForecastTbody = $('table.FcstBoxTable01 tbody tr td');
       // var weekForecastTbody2 = $('table.FcstBoxTable01 tbody td');
       // console.log(weekForecastTbody2.children()[13]);
@@ -65,7 +69,7 @@ var WeatherCrawler = function (senderID, city) {
         wfDay[i] = {'wfDate': wfDate, 'wfDoW': wfDoW, 'wfImgUrl': wfImgUrl, 'wfCondition': wfCondition, 'wfTemp': wfTemp}
       }
       // console.log(wfDay);
-      sendWeekForecast(senderID, wfDay, cwbUrl);
+      sendWeekForecast(senderID, cityName, wfDay, cwbUrl);
     });
   }
 }
