@@ -31,7 +31,7 @@ function receivedPostback(event, db, callback) {
 
     case "Subscription":
     // var intro = "請設定自動推播時間(ex:7:00, 22:10):"
-    var intro = 'p.s.訂閱方法說明: 輸入 #縣市名稱 幾點幾分\n(例如#台北 700 訂閱每天7點傳送台北天氣\nor #新竹 2330 每天23點30分傳送新竹天氣)';
+    var intro = 'p.s.訂閱方法說明:\n輸入 #縣市名稱 幾點幾分\n(例如#台北 700 訂閱每天7點傳送台北天氣\nor #新竹 2330 每天23點30分傳送新竹天氣)';
     db.collection('subscription').find({'senderID': senderID}).toArray((err, res)=>{
       if(err) return console.log('\subscription find db error: %s\n'+err);
       if (res.length==0) {
