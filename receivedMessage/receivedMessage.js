@@ -167,29 +167,37 @@ function receivedMessage(event, db, callback) {
       if (minute.charAt(0)=='0') {
         minute = minute.substr(1);
       }
-      console.log('scheduleJob:\ncity: '+city+'\nhour: '+hour+'\nminute: '+minute);
-      // scheduleJob
-      var subJob = schedule.scheduleJob(senderID, '0 '+minute+' '+hour+' * * *', ()=>{
-        console.log('\n***scheduleJob***');
-        var weather = new WeatherCrawler(senderID, cityName);
-        weather.sendTwoDay();
-      });
-      // save to db
-      db.collection('subscription').save({'senderID': senderID, 'cityName': city, 'hour': hour, 'minute': minute}, (err, res)=>{
-        if(err){
-          console.log('\n[db error]subscription save');
-          return;
+      // check db exist or not
+      db.collection('subscription').find({'senderID': senderID, 'cityName': city, 'hour': hour, 'minute': minute}).toArray((err, res)=>{
+        if(err) return console.log('\nsubscription find db error');
+        if(res.length>0){
+          sendTextMessage(senderID, '你已經訂閱過'+city+', '+hour+'點'+(minute<10? '0':'')+minute+'分 =)');
         } else {
-          console.log('\nsuccessfully saved subscription to db');
+          // scheduleJob
+          var subJob = schedule.scheduleJob(senderID, '0 '+minute+' '+hour+' * * *', ()=>{
+            console.log('\n***scheduleJob***');
+            console.log('\nscheduleJob:\nsenderID:'+senderID+' city: '+cityName+' hour: '+hour+' minute: '+minute);
+            var weather = new WeatherCrawler(senderID, cityName);
+            weather.sendTwoDay();
+          });
+          // save to db
+          db.collection('subscription').save({'senderID': senderID, 'cityName': city, 'hour': hour, 'minute': minute}, (err, res)=>{
+            if(err){
+              console.log('\n[db error]subscription save');
+              return;
+            } else {
+              console.log('\nsuccessfully saved subscription to db');
+            }
+          });
+          // send message
+          sendTextMessage(senderID, '將會固定在每天'+hour+'點'+(minute<10? '0':'')+minute+'分傳送'+city+'的最新天氣資訊給您! =)');
         }
       });
-
-      sendTextMessage(senderID, '將會固定在每天'+hour+'點'+(minute<10? '0':'')+minute+'分傳送'+city+'的最新天氣資訊給您! =)');
       break;
 
       case 'x':
       case 'X':
-      // remove subscribe
+      // remove all subscribe
       // delete db
       db.collection('subscription').deleteMany({senderID: senderID}, (err, res)=>{
         if(err) return console.log('\nremove subscription error');
