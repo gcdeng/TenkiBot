@@ -12,7 +12,7 @@ var receivedMessageRead = require('./receivedMessage/receivedMessageRead');
 var mongodburl = 'mongodb://gcdeng:tenkibot20161019@ds063856.mlab.com:63856/tenkibotdb';
 const app = express();
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 8057));
 // app.use(bodyParser.json({ verify: verifyRequestSignature }));
 // Process application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
